@@ -344,7 +344,7 @@ function enableButtonInteractions(buttonId) {
             // Additional code
             const pluginButton = document.getElementById(`${buttonId}`);
             if (pluginButton && window.innerWidth < 480 && window.innerHeight > window.innerWidth) {
-                pluginButton.setAttribute('data-tooltip', 'Resolution too low to display');
+                pluginButton.setAttribute('data-tooltip', t('plugin.spectrumPlugin.resolutionTooLowToDisplay'));
             }
         }
     });
@@ -361,7 +361,7 @@ function createButton(buttonId) {
         const observer = new MutationObserver((mutationsList, observer) => {
             if (typeof addIconToPluginPanel === 'function') {
                 observer.disconnect();
-                addIconToPluginPanel(buttonId, "Spectrum", "solid", "chart-area", "Spectrum Graph");
+                addIconToPluginPanel(buttonId, t('plugin.spectrum'), "solid", "chart-area", t('plugin.spectrumPlugin.spectrumGraph'));
                 functionFound = true;
 
                 // Setup early click handler to queue clicks during initialisation
@@ -414,7 +414,7 @@ if (document.querySelector('.dashboard-panel-plugin-list')) {
 } else {
     // FM-DX Webserver v1.3.4 compatibility
     const useLegacyButtonSpacingBetweenCanvas = true;
-    const SPECTRUM_BUTTON_NAME = 'SPECTRUM';
+    const SPECTRUM_BUTTON_NAME = t('plugin.spectrum').toUpperCase();
     const aSpectrumCss = `
     #spectrum-graph-button {
     border-radius: 0px;
@@ -814,7 +814,7 @@ function checkUpdate(setupOnly, pluginVersion, pluginName, urlUpdateLink, urlFet
     fetchFirstLine().then(newVersion => {
         if (newVersion) {
             if (newVersion !== pluginVersion) {
-                let updateConsoleText = "There is a new version of this plugin available";
+                let updateConsoleText = t('plugin.newVersionAvailable');
                 // Any custom code here
                 updateText = updateConsoleText; // Spectrum Graph only
                 logInfo(`${updateConsoleText}`);
@@ -828,9 +828,9 @@ function checkUpdate(setupOnly, pluginVersion, pluginName, urlUpdateLink, urlFet
           const pluginSettings = document.getElementById('plugin-settings');
           if (pluginSettings) {
             const currentText = pluginSettings.textContent.trim();
-            const newText = `<a href="${urlUpdateLink}" target="_blank">[${pluginName}] Update available: ${pluginVersion} --> ${newVersion}</a><br>`;
+            const newText = `<a href="${urlUpdateLink}" target="_blank">[${pluginName}] ${t('plugin.updateAvailable')}: ${pluginVersion} --> ${newVersion}</a><br>`;
 
-            if (currentText === 'No plugin settings are available.') {
+            if (currentText === t('plugin.noPluginSettings')) {
               pluginSettings.innerHTML = newText;
             } else {
               pluginSettings.innerHTML += ' ' + newText;
@@ -929,9 +929,9 @@ function ScanButton() {
     // Create new button for controlling spectrum
     const spectrumButton = document.createElement('button');
     spectrumButton.id = 'spectrum-scan-button';
-    spectrumButton.setAttribute('aria-label', 'Perform manual spectrum graph scan');
+    spectrumButton.setAttribute('aria-label', t('plugin.spectrumPlugin.performManualSpectrumGraphScan'));
     spectrumButton.classList.add('rectangular-spectrum-button', 'tooltip');
-    spectrumButton.setAttribute('data-tooltip', 'Perform Manual Scan');
+    spectrumButton.setAttribute('data-tooltip', t('plugin.spectrumPlugin.performManualScan'));
     spectrumButton.innerHTML = '<i class="fa-solid fa-rotate"></i>';
     spectrumButton.addEventListener('contextmenu', e => e.preventDefault());
 
@@ -1017,14 +1017,14 @@ function ScanButton() {
     /*
     ToggleAddButton(Id,                             Tooltip,                    FontAwesomeIcon,    localStorageVariable,   localStorageKey,                ButtonPosition)
     */
-    ToggleAddButton('hold-button',                  'Hold Peaks',               'pause',            'enableHold',           `HoldPeaks${currentAntenna}`,   '56',   'Hold peaks'); //ToggleAddButton 'hold-button' located in getCurrentAntenna(), added here only to keep buttons in order
-    ToggleAddButton('smoothing-on-off-button',      'Smooth Graph Edges',       'chart-area',       'enableSmoothing',      'Smoothing',                    '96',   'Visually smooth graph edges');
-    ToggleAddButton('fixed-dynamic-on-off-button',  'Relative/Fixed Scale',     'arrows-up-down',   'fixedVerticalGraph',   'FixedVerticalGraph',           '136',  'Toggle between relative or fixed scale');
-    ToggleAddButton('auto-baseline-on-off-button',  'Auto Baseline',            'a',                'isAutoBaseline',       'AutoBaseline',                 '176',  'Auto baseline (adjust graph for noise floor)');
+    ToggleAddButton('hold-button',                  t('plugin.spectrumPlugin.holdPeaks'),               'pause',            'enableHold',           `HoldPeaks${currentAntenna}`,   '56',   t('plugin.spectrumPlugin.holdPeaks')); //ToggleAddButton 'hold-button' located in getCurrentAntenna(), added here only to keep buttons in order
+    ToggleAddButton('smoothing-on-off-button',      t('plugin.spectrumPlugin.smoothGraphEdges'),       'chart-area',       'enableSmoothing',      'Smoothing',                    '96',   t('plugin.spectrumPlugin.visuallySmoothGraphEdges'));
+    ToggleAddButton('fixed-dynamic-on-off-button',  t('plugin.spectrumPlugin.relativeFixedScale'),     'arrows-up-down',   'fixedVerticalGraph',   'FixedVerticalGraph',           '136',  t('plugin.spectrumPlugin.toggleRelativeOrFixedScale'));
+    ToggleAddButton('auto-baseline-on-off-button',  t('common.autoBaseline'),            'a',                'isAutoBaseline',       'AutoBaseline',                 '176',  t('common.autoBaselineAdjust'));
     if (drawAboveCanvasIsPossible) {
-    ToggleAddButton('draw-above-canvas',            'Move Above Signal Graph', 
+    ToggleAddButton('draw-above-canvas',            t('plugin.spectrumPlugin.moveAboveSignalGraph'), 
                                               drawAboveCanvasOverridePosition ? 'turn-down' : 
-                                                                                'turn-up',          'isAboveSignalCanvas',  'AboveSignalCanvas',            '216',  'Move spectrum graph above signal graph');
+                                                                                'turn-up',          'isAboveSignalCanvas',  'AboveSignalCanvas',            '216',  t('plugin.spectrumPlugin.moveSpectrumGraph'));
 
         const drawAboveSignalCanvasButton = document.getElementById('draw-above-canvas');
         drawAboveSignalCanvasButton.addEventListener('click', function() {
@@ -1246,8 +1246,11 @@ document.addEventListener('DOMContentLoaded', () => {
 // Is the user administrator?
 function checkAdminMode() {
     const bodyText = document.body.textContent || document.body.innerText;
+    const compareText1 = t('plugin.loggedInAsAdministrator');
+    const compareText2 = t('menu.loggedAsAdmin');
+    const compareText3 = t('plugin.loggedInCanControlReceiver');
     isTunerLocked = !!document.querySelector('.fa-solid.fa-key.pointer.tooltip') || !!document.querySelector('.fa-solid.fa-lock.pointer.tooltip');
-    isTuneAuthenticated = bodyText.includes("You are logged in as an administrator.") || bodyText.includes("You are logged in as an adminstrator.") || bodyText.includes("You are logged in and can control the receiver.");
+    isTuneAuthenticated = bodyText.includes(compareText1) || bodyText.includes(compareText2) || bodyText.includes(compareText3);
     if (isTuneAuthenticated || (isTunerLocked && isTuneAuthenticated) || (!isTunerLocked && !isTuneAuthenticated)) isTuningAllowed = true;
     if (isTuneAuthenticated) {
         logInfo(`Logged in as administrator`);
@@ -1380,7 +1383,7 @@ async function getCurrentAntenna() {
 
                 // Hold peaks antenna localStorage
                 localStorageItem.enableHold = localStorage.getItem(`enableSpectrumGraphHoldPeaks${currentAntenna}`) === 'true';     // Holds peaks
-                if (isGraphOpen) ToggleAddButton('hold-button',                  'Hold Peaks',               'pause',            'enableHold',           `HoldPeaks${currentAntenna}`,   '56',  'Hold peaks');
+                if (isGraphOpen) ToggleAddButton('hold-button',                  t('plugin.spectrumPlugin.holdPeaks'),               'pause',            'enableHold',           `HoldPeaks${currentAntenna}`,   '56',  t('plugin.spectrumPlugin.holdPeaks'));
                 if (typeof initTooltips === 'function') initTooltips();
                 outlinePointsSavePermission = !localStorageItem.enableHold;
                 if (isGraphOpen) setTimeout(drawGraph, drawGraphDelay);
@@ -2343,7 +2346,9 @@ function drawGraph() {
     // For screen readers
     const sdrGraph = document.querySelector('.canvas-container');
     if (sdrGraph) sdrGraph.setAttribute('role', 'img');
-    if (sdrGraph) sdrGraph.setAttribute('aria-label', `Signal graph showing ${parseInt(ariaLabelStationCount / 3)} possibly detected stations across the frequency spectrum from ${minFreq} to ${maxFreq} MHz`);
+    // @TODO need to translate from translation file
+    // if (sdrGraph) sdrGraph.setAttribute('aria-label', `Signal graph showing ${parseInt(ariaLabelStationCount / 3)} possibly detected stations across the frequency spectrum from ${minFreq} to ${maxFreq} MHz`);
+    if (sdrGraph) sdrGraph.setAttribute('aria-label', `${minFreq} ile ${maxFreq} MHz arasında algılanan muhtemel ${parseInt(ariaLabelStationCount / 3)} istasyonu gösteren sinyal grafiği`);
 
     if (localStorageItem.enableSmoothing) {
         ctx.fillStyle = gradient;
@@ -2550,12 +2555,12 @@ function drawGraph() {
     if (!graphError && !isScanComplete) {
         isScanComplete = true;
         isScanCompleteFirstWarn = true;
-        insertUpdateText(`[${pluginName}] Spectrum scan appears incomplete. Perform a manual rescan if needed.`);
+        insertUpdateText(`[${pluginName}] ${t('plugin.spectrumPlugin.spectrumScanAppearsIncomplete')}`);
     }
 
     if (graphError) {
         graphError = false;
-        insertUpdateText(`[${pluginName}] Error during graph initialisation. The server may need to be restarted.`);
+        insertUpdateText(`[${pluginName}] ${t('plugin.spectrumPlugin.errorDuringGraphInitialisation')}`);
     }
 
     return updateBounds(xScale, minFreq, freqRange, yScale);
