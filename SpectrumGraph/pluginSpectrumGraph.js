@@ -361,7 +361,7 @@ function createButton(buttonId) {
         const observer = new MutationObserver((mutationsList, observer) => {
             if (typeof addIconToPluginPanel === 'function') {
                 observer.disconnect();
-                addIconToPluginPanel(buttonId, t('plugin.spectrum'), "solid", "chart-area", t('plugin.spectrumPlugin.showAllSpectrum'));
+                addIconToPluginPanel(buttonId, t('plugin.spectrum'), "solid", "chart-area", t('plugin.showAllSpectrum'));
                 functionFound = true;
 
                 // Setup early click handler to queue clicks during initialisation
