@@ -23,7 +23,7 @@ const SPECTRUM_COLOR_STYLE = 'DEFAULT';         // 'DEFAULT', 'ACCURATE_4', 'ACC
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 const pluginVersion = '1.3.0';
-const pluginName = "Spectrum Graph";
+const pluginName = t('plugin.spectrum');
 const pluginHomepageUrl = "https://github.com/AmateurAudioDude/FM-DX-Webserver-Plugin-Spectrum-Graph";
 const pluginUpdateUrl = "https://raw.githubusercontent.com/AmateurAudioDude/FM-DX-Webserver-Plugin-Spectrum-Graph/refs/heads/main/SpectrumGraph/pluginSpectrumGraph.js";
 const pluginSetupOnlyNotify = false;
@@ -35,29 +35,31 @@ const ANTENNA_SCAN_NOTICE_INTERVAL_SECONDS = 180;                           // O
 const MARKER_TOLERANCE_PX = 3;                                              // Mouse position tolerance in pixels of marker selection
 const CAL90000 = 0.0, CAL95500 = 0.0, CAL100500 = 0.0, CAL105500 = 0.0;     // Signal calibration (requires external hardware to set signal strength)
 const SCAN_COVERAGE_OPACITY = 0.2;                                          // Scanner plugin 'defaultScannerMode' opacity value
-const DEFAULT_LANGUAGE = 'en';                                              // Default language (browser language setting overrides)
+const DEFAULT_LANGUAGE = 'tr';                                              // Default language (browser language setting overrides)
 
+// @TODO: Remove this when we enable multiple languages support
 // Language translations
 const translations = {
-  en: {
-    __name: 'English',
-    spectrumGraph: `Spectrum Graph`,
-    newVersion: `There is a new version of Spectrum Graph available`,
-    spectrumScanIncomplete: `Spectrum scan appears incomplete. Perform a manual scan if needed.`,
-    spectrumScanInvalid: `Spectrum scan appears invalid. Perform a manual scan if needed.`,
-    spectrumScanLocked:  `Scanning is currently locked by the administrator`,
-    errorDuringInitialisation: `[${pluginName}] Error initialising graph. The server may need to be restarted.`,
-    holdPeaks: `Hold Peaks`,
-    smoothGraphEdges: `Smooth Graph Edges`,
-    relativeFixedScale: `Relative/Fixed Scale`,
-    autoBaseline: `Auto Baseline`,
-    performManualScan: `Perform Manual Scan`,
-    moveAboveSignalGraph: `Move Above Signal Graph`,
-    resolutionTooLowToDisplay: `Resolution too low to display`,
-    scanOlderThanXMinutes: `Scan older than {hours}h {minutes}m for {antennas}`,
-    noSignal: `[${pluginName}] Error receiving signal data`,
-    scanning: `Scanning`,
-  },
+  // en: {
+  //   __name: 'English (UK)',
+  //   spectrumGraph: `Spectrum Graph`,
+  //   newVersion: `There is a new version of Spectrum Graph available`,
+  //   spectrumScanIncomplete: `Spectrum scan appears incomplete. Perform a manual scan if needed.`,
+  //   spectrumScanInvalid: `Spectrum scan appears invalid. Perform a manual scan if needed.`,
+  //   spectrumScanLocked:  `Scanning is currently locked by the administrator`,
+  //   errorDuringInitialisation: `[${pluginName}] Error initialising graph. The server may need to be restarted.`,
+  //   holdPeaks: `Hold Peaks`,
+  //   smoothGraphEdges: `Smooth Graph Edges`,
+  //   relativeFixedScale: `Relative/Fixed Scale`,
+  //   autoBaseline: `Auto Baseline`,
+  //   performManualScan: `Perform Manual Scan`,
+  //   moveAboveSignalGraph: `Move Above Signal Graph`,
+  //   resolutionTooLowToDisplay: `Resolution too low to display`,
+  //   scanOlderThanXMinutes: `Scan older than {hours}h {minutes}m for {antennas}`,
+  //   noSignal: `[${pluginName}] Error receiving signal data`,
+  //   scanning: `Scanning`,
+  //   moveSpectrumGraph: t('plugin.spectrumPlugin.moveSpectrumGraph'),
+  // },
   // en_us: {
   //   __name: 'English (US)',
   //   spectrumGraph: `Spectrum Graph`,
@@ -232,12 +234,21 @@ const translations = {
   tr: {
     __name: 'Türkçe',
     spectrumGraph: t('plugin.spectrum'),
+    newVersion: t('plugin.spectrumPlugin.newVersionAvailable'),
+    spectrumScanIncomplete: t('plugin.spectrumPlugin.spectrumScanAppearsIncomplete'),
+    spectrumScanInvalid: t('plugin.spectrumPlugin.spectrumScanInvalid'),
+    spectrumScanLocked:  t('plugin.spectrumPlugin.spectrumScanLocked'),
+    errorDuringInitialisation: `[${pluginName}] ${t('plugin.spectrumPlugin.errorDuringInitialisation')}`,
     holdPeaks: t('plugin.spectrumPlugin.holdPeaks'),
     smoothGraphEdges: t('plugin.spectrumPlugin.smoothGraphEdges'),
     relativeFixedScale: t('plugin.spectrumPlugin.relativeFixedScale'),
     autoBaseline: t('plugin.spectrumPlugin.autoBaseline'),
-    resolutionTooLowToDisplay: t('plugin.spectrumPlugin.resolutionTooLowToDisplay'),
     performManualScan: t('plugin.spectrumPlugin.performManualScan'),
+    moveAboveSignalGraph: t('plugin.spectrumPlugin.moveAboveSignalGraph'),
+    resolutionTooLowToDisplay: t('plugin.spectrumPlugin.resolutionTooLowToDisplay'),
+    scanOlderThanXMinutes: t('plugin.spectrumPlugin.scanOlderThanXMinutes'),
+    noSignal: `[${pluginName}] ${t('plugin.spectrumPlugin.noSignal')}`,
+    scanning: t('plugin.spectrumPlugin.scanning'),
     moveSpectrumGraph: t('plugin.spectrumPlugin.moveSpectrumGraph'),
   }
 };
@@ -394,9 +405,18 @@ function logError(...msg) {
 if (localStorage.getItem('enableSpectrumCurrentLanguage')) {
   currentLanguage = localStorage.getItem('enableSpectrumCurrentLanguage');
 } else {
-  const browserLanguage = navigator.language || navigator.userLanguage;
-  const languageCode = browserLanguage.split('-')[0];
-  const fullLanguageCode = browserLanguage.toLowerCase();
+  // Get language from cookie 'lang', fallback to browser if not present
+  let languageCode, fullLanguageCode;
+  let cookieLang = document.cookie.split('; ').find(row => row.startsWith('lang='));
+  if (cookieLang) {
+      cookieLang = decodeURIComponent(cookieLang.split('=')[1]);
+      languageCode = cookieLang.split('-')[0].replace('-', '_').toLowerCase();
+      fullLanguageCode = cookieLang.toLowerCase().replace('-', '_');
+  } else {
+      const browserLanguage = navigator.language || navigator.userLanguage;
+      languageCode = browserLanguage.split('-')[0].replace('-', '_').toLowerCase();
+      fullLanguageCode = browserLanguage.toLowerCase().replace('-', '_');
+  }
 
   if (translations[fullLanguageCode]) {
     currentLanguage = fullLanguageCode;
@@ -407,7 +427,13 @@ if (localStorage.getItem('enableSpectrumCurrentLanguage')) {
   }
 }
 
+// @TODO: Remove this when we enable multiple languages support
+currentLanguage = 'tr';
+
 function getCurrentLanguage() {
+    // @TODO: Remove this when we enable multiple languages support
+    return 'tr';
+
     localStorageItem.currentLanguage = `enableSpectrumCurrentLanguage`;
 
     // Check if language is saved in localStorage
@@ -416,11 +442,18 @@ function getCurrentLanguage() {
     if (saved) {
         currentLanguage = saved;
     } else {
-        // Get browser language
-        const browserLanguage = navigator.language || navigator.userLanguage;
-        const languageCode = browserLanguage.split('-')[0].replace('-', '_');
-        const fullLanguageCode = browserLanguage.toLowerCase().replace('-', '_'); // Convert '-' to '_' for 'translations' variable
-
+        // Get language from cookie 'lang', fallback to browser if not present
+        let languageCode, fullLanguageCode;
+        let cookieLang = document.cookie.split('; ').find(row => row.startsWith('lang='));
+        if (cookieLang) {
+            cookieLang = decodeURIComponent(cookieLang.split('=')[1]);
+            languageCode = cookieLang.split('-')[0].replace('-', '_').toLowerCase();
+            fullLanguageCode = cookieLang.toLowerCase().replace('-', '_');
+        } else {
+            const browserLanguage = navigator.language || navigator.userLanguage;
+            languageCode = browserLanguage.split('-')[0].replace('-', '_').toLowerCase();
+            fullLanguageCode = browserLanguage.toLowerCase().replace('-', '_');
+        }
         if (translations[fullLanguageCode]) {
           currentLanguage = fullLanguageCode;
         } else if (translations[languageCode]) {
