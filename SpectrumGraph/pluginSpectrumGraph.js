@@ -22,10 +22,10 @@ const SPECTRUM_COLOR_STYLE = 'DEFAULT';         // 'DEFAULT', 'ACCURATE_4', 'ACC
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-const pluginVersion = '1.3.0';
+const pluginVersion = '1.0';
 const pluginName = t('plugin.spectrum');
-const pluginHomepageUrl = "https://github.com/AmateurAudioDude/FM-DX-Webserver-Plugin-Spectrum-Graph";
-const pluginUpdateUrl = "https://raw.githubusercontent.com/AmateurAudioDude/FM-DX-Webserver-Plugin-Spectrum-Graph/refs/heads/main/SpectrumGraph/pluginSpectrumGraph.js";
+const pluginHomepageUrl = "https://github.com/nuscarrick/FM-DX-Webserver-Plugin-Spectrum-Graph";
+const pluginUpdateUrl = "https://raw.githubusercontent.com/nuscarrick/FM-DX-Webserver-Plugin-Spectrum-Graph/main/SpectrumGraph/pluginSpectrumGraph.js";
 const pluginSetupOnlyNotify = true;
 const CHECK_FOR_UPDATES = true;
 
