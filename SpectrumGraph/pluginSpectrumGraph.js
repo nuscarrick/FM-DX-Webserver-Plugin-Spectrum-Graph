@@ -24,8 +24,8 @@ const SPECTRUM_COLOR_STYLE = 'DEFAULT';         // 'DEFAULT', 'ACCURATE_4', 'ACC
 
 const pluginVersion = '1.0';
 const pluginName = "Spectrum Graph";
-const pluginHomepageUrl = "https://github.com/nuscarrick/FM-DX-Webserver-Plugin-Spectrum-Graph";
-const pluginUpdateUrl = "https://raw.githubusercontent.com/nuscarrick/FM-DX-Webserver-Plugin-Spectrum-Graph/main/SpectrumGraph/pluginSpectrumGraph.js";
+const pluginHomepageUrl = "https://github.com/nuscarrick/RadioDataCenter-Spectrum-Graph";
+const pluginUpdateUrl = "https://raw.githubusercontent.com/nuscarrick/RadioDataCenter-Spectrum-Graph/main/SpectrumGraph/pluginSpectrumGraph.js";
 const pluginSetupOnlyNotify = false;
 const CHECK_FOR_UPDATES = true;
 
