@@ -391,20 +391,20 @@ function logError(...msg) {
 /* ==================================================
                     LANGUAGE HANDLING
    ================================================== */
+// Resolves the shared /setup language mode (en/tr/both) down to one of this
+// plugin's own translation dictionaries. 'both' has no bilingual strings here,
+// so it falls back to 'en', matching how other single-locale callers treat it.
+function resolveSharedLanguage() {
+  const mode = (typeof window !== 'undefined' && typeof window.getLanguageMode === 'function')
+    ? window.getLanguageMode()
+    : 'en';
+  return mode === 'tr' ? 'tr' : 'en';
+}
+
 if (localStorage.getItem('enableSpectrumCurrentLanguage')) {
   currentLanguage = localStorage.getItem('enableSpectrumCurrentLanguage');
 } else {
-  const browserLanguage = navigator.language || navigator.userLanguage;
-  const languageCode = browserLanguage.split('-')[0];
-  const fullLanguageCode = browserLanguage.toLowerCase();
-
-  if (translations[fullLanguageCode]) {
-    currentLanguage = fullLanguageCode;
-  } else if (translations[languageCode]) {
-    currentLanguage = languageCode;
-  } else {
-    currentLanguage = 'en'; // Fallback
-  }
+  currentLanguage = resolveSharedLanguage();
 }
 
 function getCurrentLanguage() {
@@ -416,18 +416,7 @@ function getCurrentLanguage() {
     if (saved) {
         currentLanguage = saved;
     } else {
-        // Get browser language
-        const browserLanguage = navigator.language || navigator.userLanguage;
-        const languageCode = browserLanguage.split('-')[0].replace('-', '_');
-        const fullLanguageCode = browserLanguage.toLowerCase().replace('-', '_'); // Convert '-' to '_' for 'translations' variable
-
-        if (translations[fullLanguageCode]) {
-          currentLanguage = fullLanguageCode;
-        } else if (translations[languageCode]) {
-          currentLanguage = languageCode;
-        } else {
-          currentLanguage = 'en';  // Fallback
-        }
+        currentLanguage = resolveSharedLanguage();
     }
 }
 
