@@ -229,16 +229,28 @@ const translations = {
   //   noSignal: `[${pluginName}] Hiba a jeladatok fogadása közben`,
   //   scanning: `Szkennelés`,
   // },
+  // Every key below must match a key in the `en` block above, otherwise
+  // getTranslatedText() silently falls back to the English value. The Turkish
+  // text itself lives in locales/tr.json under plugin.spectrumPlugin.* — this
+  // block only wires the two together.
   tr: {
     __name: 'Türkçe',
     spectrumGraph: t('plugin.spectrum'),
+    newVersion: t('plugin.spectrumPlugin.newVersionAvailable'),
+    spectrumScanIncomplete: t('plugin.spectrumPlugin.spectrumScanAppearsIncomplete'),
+    spectrumScanInvalid: t('plugin.spectrumPlugin.spectrumScanInvalid'),
+    spectrumScanLocked: t('plugin.spectrumPlugin.spectrumScanLocked'),
+    errorDuringInitialisation: `[${pluginName}] ${t('plugin.spectrumPlugin.errorDuringInitialisation')}`,
     holdPeaks: t('plugin.spectrumPlugin.holdPeaks'),
     smoothGraphEdges: t('plugin.spectrumPlugin.smoothGraphEdges'),
     relativeFixedScale: t('plugin.spectrumPlugin.relativeFixedScale'),
     autoBaseline: t('plugin.spectrumPlugin.autoBaseline'),
-    resolutionTooLowToDisplay: t('plugin.spectrumPlugin.resolutionTooLowToDisplay'),
     performManualScan: t('plugin.spectrumPlugin.performManualScan'),
-    moveSpectrumGraph: t('plugin.spectrumPlugin.moveSpectrumGraph'),
+    moveAboveSignalGraph: t('plugin.spectrumPlugin.moveAboveSignalGraph'),
+    resolutionTooLowToDisplay: t('plugin.spectrumPlugin.resolutionTooLowToDisplay'),
+    scanOlderThanXMinutes: t('plugin.spectrumPlugin.scanOlderThanXMinutes'),
+    noSignal: `[${pluginName}] ${t('plugin.spectrumPlugin.noSignal')}`,
+    scanning: t('plugin.spectrumPlugin.scanning'),
   }
 };
 
