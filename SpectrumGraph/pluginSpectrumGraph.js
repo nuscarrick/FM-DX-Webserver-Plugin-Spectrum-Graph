@@ -26,7 +26,7 @@ const pluginVersion = '1.3.0';
 const pluginName = t('plugin.spectrum');
 const pluginHomepageUrl = "https://github.com/AmateurAudioDude/FM-DX-Webserver-Plugin-Spectrum-Graph";
 const pluginUpdateUrl = "https://raw.githubusercontent.com/AmateurAudioDude/FM-DX-Webserver-Plugin-Spectrum-Graph/refs/heads/main/SpectrumGraph/pluginSpectrumGraph.js";
-const pluginSetupOnlyNotify = false;
+const pluginSetupOnlyNotify = true;
 const CHECK_FOR_UPDATES = true;
 
 // const advanced settings variables
