@@ -406,11 +406,23 @@ function logError(...msg) {
 // Resolves the shared /setup language mode (en/tr/both) down to one of this
 // plugin's own translation dictionaries. 'both' has no bilingual strings here,
 // so it falls back to 'en', matching how other single-locale callers treat it.
+//
+// Not every webserver has that shared setting: getLanguageMode() ships with
+// the /setup language config, which older branches never received. Assuming
+// 'en' there silently forces English onto Turkish tuners, so fall back to the
+// browser detection this plugin used before the shared setting existed.
 function resolveSharedLanguage() {
-  const mode = (typeof window !== 'undefined' && typeof window.getLanguageMode === 'function')
-    ? window.getLanguageMode()
-    : 'en';
-  return mode === 'tr' ? 'tr' : 'en';
+  if (typeof window !== 'undefined' && typeof window.getLanguageMode === 'function') {
+    return window.getLanguageMode() === 'tr' ? 'tr' : 'en';
+  }
+
+  const browserLanguage = navigator.language || navigator.userLanguage || 'en';
+  const languageCode = browserLanguage.split('-')[0];
+  const fullLanguageCode = browserLanguage.toLowerCase();
+
+  if (translations[fullLanguageCode]) return fullLanguageCode;
+  if (translations[languageCode]) return languageCode;
+  return 'en';
 }
 
 if (localStorage.getItem('enableSpectrumCurrentLanguage')) {
